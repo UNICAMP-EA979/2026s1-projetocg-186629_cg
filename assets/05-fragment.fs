@@ -30,7 +30,7 @@ void main()
     vec3 worldNormalNormalized = normalize(worldNormal);
 
     // Calcule a direção de visualização (saindo do ponto)
-    vec3 viewDirection = -normalize(worldPosition);
+    vec3 viewDirection = normalize(-worldPosition);
 
     // Calcule a uv com tiling
     vec2 uvTiling = uv * tiling;
@@ -43,8 +43,8 @@ void main()
     vec3 color = vec3(0);
 
     // Calcule a luz ambiente
-    vec3 ambientLightContribution = baseColor * ambientColor * (1 - metallic) / PI;
-
+    // Luz ambiente escura para simular luz indireta
+    vec3 ambientLightContribution = ambientColor * baseColor * (1.0 - metallic);
     color += ambientLightContribution;
 
     for(int i = 0; i < MAX_LIGHT; i++)
@@ -57,26 +57,25 @@ void main()
 
         //Calcule dados da luz (atenuação, cor, direção)
         float attenuation = computeLightAttenuation(light, worldPosition);
-        vec3 lightColor = light.intensity * light.color * attenuation;
+        vec3 lightColor = light.color;
         vec3 lightDirection = computeLightDirection(light, worldPosition);
 
         //Calcule o half-angle
-        vec3 halfAngle = normalize(lightDirection + viewDirection);
+        vec3 halfAngle = normalize(viewDirection + lightDirection);
 
         //Calcule as refletância de fresnel, difusa e especular
         vec3 fresnel = fresnelReflectance(baseColor, metallic, halfAngle, lightDirection);
-        vec3 diffuse = diffuseReflectance(fresnel, baseColor, metallic);
-        vec3 specular = specularReflectance(fresnel, worldNormalNormalized, halfAngle, viewDirection, lightDirection, roughness);
+        vec3 f_diff = diffuse(baseColor, metallic, fresnel);
+        vec3 f_spec = specular(halfAngle, worldNormalNormalized, lightDirection, viewDirection, roughness, fresnel);
 
         //Calcule a refletância final
-        vec3 reflectance = diffuse + specular;
+        vec3 reflectance = f_diff + f_spec;
 
         //Calcule a contribuição da luz e acumule na color
-        float lightnormal = max(dot(worldNormalNormalized, lightDirection), 0.0);
-        vec3 lightContribution = reflectance * lightColor * lightnormal;
-
+        float cosLambda = max(0.0, dot(worldNormalNormalized, lightDirection));
+        vec3 lightContribution = PI * lightColor * reflectance * attenuation * cosLambda;
         color += lightContribution;
     }
 
-    FragColor = vec4(color, 1.0) * PI;
+    FragColor = vec4(color, 1.0);
 }
