@@ -57,7 +57,8 @@ O projeto será avaliado segundo:
 
 Descreva a cena que implementaram:
 
-`Descrição`
+Cena espacial estilizada com um céu estrelado de fundo, um objeto central animado em rotação e escala pulsante, e cubos orbitando ao redor do centro. A cena combina geometria importada (`assets/CenaExemplo.glb`) com materiais PBR baseados em textura de rocha para os cubos, além de um material dedicado para o plano de fundo.  
+Na iluminação, foi utilizada uma luz direcional principal e luzes pontuais coloridas para reforçar contraste e profundidade. O objetivo visual é criar uma composição de ficção científica com sensação de movimento contínuo.
 
 (Dica: para incluir imagens, utilize ![](Caminho da imagem))
 
@@ -65,4 +66,5 @@ Descreva a cena que implementaram:
 
 Para todo asset que tiver baixado da internet, coloque a referência dele (segundo eterminado por sua licensa):
 
-- `Nome do Asset`: `Licensa` (`Link`)
+- `Blue-universe-956981.jpg`: `Pixabay License` (`https://pixabay.com/photos/blue-universe-night-956981/`)
+- `Rock035_1K-JPG` (texturas `Rock035_1K-JPG_Color.jpg` e `Rock035_1K-JPG_Roughness.jpg`): `CC0` (`https://ambientcg.com/view?id=Rock035`)
