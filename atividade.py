@@ -1,6 +1,10 @@
 from collections import deque
+from pathlib import Path
+import sys
 
 import numpy as np
+
+sys.path.insert(0, str(Path(__file__).resolve().parent / "src"))
 import urenderer
 from OpenGL import GL
 from urenderer.node import Node
@@ -100,6 +104,7 @@ if __name__ == "__main__":
     # Carregamos a cena (ou poderia ser criada com primitivas)
     glb_root = urenderer.geometry.mesh.load_glb("assets/CenaExemplo.glb")
 
+    center = np.zeros(3, dtype=np.float32)
     nodes = deque([glb_root])
     while len(nodes) != 0:
         node = nodes.pop()
@@ -157,11 +162,14 @@ if __name__ == "__main__":
     # light3.translation = np.array([1, -1, -6], np.float64)
     light3.light_color = np.array([1.0, 0.0, 1.0], np.float32)
     light3.light_intensity = 5.0
-    last_cube.add_child(light3)
+    if last_cube is not None:
+        last_cube.add_child(light3)
+    else:
+        runtime.scene.add_child(light3)
 
     # Renderizamos a cena
 
-    video = True
+    video = False
     if video:
         # Renderização salvando video
         # Podemos ajustar os parâmetros para alterar o tamanho ou frequência de sampling
